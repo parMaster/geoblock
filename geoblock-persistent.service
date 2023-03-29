@@ -1,0 +1,15 @@
+[Unit]
+Description=load geoblock iptables rule
+After=network.target
+After=ipset-persistent.service
+After=ufw.service
+
+ConditionFileNotEmpty=/etc/ipset.conf
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/iptables -I INPUT -m set --match-set geoblock src -j DROP
+
+[Install]
+WantedBy=multi-user.target
