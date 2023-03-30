@@ -23,4 +23,15 @@ status:
 	sudo systemctl status ipset-persistent.service
 	sudo systemctl status geoblock-persistent.service
 
-.PHONY: cleanup add service-deploy status
+uninstall:
+	make cleanup
+	systemctl stop ipset-persistent.service
+	systemctl stop geoblock-persistent.service
+	systemctl disable ipset-persistent.service
+	systemctl disable geoblock-persistent.service
+	rm /etc/systemd/system/ipset-persistent.service
+	rm /etc/systemd/system/geoblock-persistent.service
+	systemctl daemon-reload
+	rm /etc/ipset.conf
+
+.PHONY: cleanup add service-deploy status uninstall
