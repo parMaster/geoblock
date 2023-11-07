@@ -1,5 +1,7 @@
 cleanup:
-	iptables -D INPUT -m set --match-set geoblock src -j DROP || true
+	iptables -D INPUT -m set --match-set geoblock src -j LOGGING || true
+	iptables -D LOGGING -m limit --limit 10/min -j LOG --log-prefix "geoblock: " --log-level 6 || true
+	iptables -D LOGGING -j DROP || true
 	ipset destroy geoblock
 
 add:
@@ -11,13 +13,15 @@ add:
 	make service-deploy
 
 service-deploy:
+	cp geoblock.sh /usr/local/bin/
+	chmod +x /usr/local/bin/geoblock.sh
 	cp ipset-persistent.service /etc/systemd/system/
 	cp geoblock-persistent.service /etc/systemd/system/
 	systemctl daemon-reload
-	systemctl enable ipset-persistent.service 
-	systemctl start ipset-persistent.service 
-	systemctl enable geoblock-persistent.service 
-	systemctl start geoblock-persistent.service 
+	systemctl enable ipset-persistent.service
+	systemctl start ipset-persistent.service
+	systemctl enable geoblock-persistent.service
+	systemctl start geoblock-persistent.service
 
 status:
 	sudo systemctl status ipset-persistent.service
@@ -33,5 +37,6 @@ uninstall:
 	rm /etc/systemd/system/geoblock-persistent.service
 	systemctl daemon-reload
 	rm /etc/ipset.conf
+	rm /usr/local/bin/geoblock.sh
 
 .PHONY: cleanup add service-deploy status uninstall
