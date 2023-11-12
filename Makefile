@@ -2,7 +2,8 @@ cleanup:
 	iptables -D INPUT -m set --match-set geoblock src -j LOGGING || true
 	iptables -D LOGGING -m limit --limit 10/min -j LOG --log-prefix "geoblock: " --log-level 6 || true
 	iptables -D LOGGING -j DROP || true
-	ipset destroy geoblock
+	iptables -X LOGGING || true
+	ipset destroy geoblock || true
 
 add:
 	iprange --optimize lists/* > geoblock.txt
