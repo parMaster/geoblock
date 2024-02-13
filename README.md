@@ -5,6 +5,9 @@ It is basically a convenient way to block countries by IP with iptables. Step-by
 ## Prereqs
 
 Geoip lists downloaded from [countryipblocks.net](https://www.countryipblocks.net/acl.php), select countries and CIDR format. 
+
+Alternatively, [this repository](https://github.com/herrbischoff/country-ip-blocks/tree/master) keeps regularly updated IPv4 and IPv6 countries IP ranges, so lists can be simply curl-ed from command line.
+
 Save lists into files in `lists/` folder. A couple of useful lists are provided as an example. Multiple lists will be automatically combined and optimized. Remember to update lists from time to time.
 
 Install `iprange` and `ipset` with:
