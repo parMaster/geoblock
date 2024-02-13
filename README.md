@@ -4,17 +4,19 @@ It is basically a convenient way to block countries by IP with iptables. Step-by
 
 ## Prereqs
 
-Geoip lists downloaded from [countryipblocks.net](https://www.countryipblocks.net/acl.php), select countries and CIDR format. 
-
-Alternatively, [this repository](https://github.com/herrbischoff/country-ip-blocks/tree/master) keeps regularly updated IPv4 and IPv6 countries IP ranges, so lists can be simply curl-ed from command line.
-
-Save lists into files in `lists/` folder. A couple of useful lists are provided as an example. Multiple lists will be automatically combined and optimized. Remember to update lists from time to time.
+Load countries IP ranges in CIDR format to the `lists/` folder (see `make load <country code>` instructions). A couple of useful lists are provided as an example. Multiple lists will be automatically combined and optimized. Remember to update lists from time to time.
 
 Install `iprange` and `ipset` with:
 
 	sudo apt install -y iprange ipset
 
 ## Installation
+
+`make load <country code>` will load a list of IP ranges for a specific country from the  [herrbischoff/country-ip-blocks](https://github.com/herrbischoff/country-ip-blocks) repository and save into `lists` directory. For example, to load usual suspects:
+
+	make load ru
+	make load cn
+	make load by
 
 `make add` will copy everything where it supposed to be and start services: 
 
@@ -42,6 +44,10 @@ Then there are two systemd services:
 - `geoblock-persistent.service` starts next and runs a script that sets up a firewall rule to block incoming traffic from IP addresses listed in the `geoblock` set, log the blocked attempts up to a limit, and then drop the packets.
 
 ## Some sources that were used to make this
+
+### Country IP blocks:
+
+https://github.com/herrbischoff/country-ip-blocks
 
 ### iptables man:
 

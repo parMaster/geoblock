@@ -1,3 +1,8 @@
+load:
+# Loads the IP ranges for the specified country code from the herrbischoff/country-ip-blocks repository
+# Usage: make load <country-code>
+	$(foreach var,$(filter-out $@,$(MAKECMDGOALS)),curl -s https://raw.githubusercontent.com/herrbischoff/country-ip-blocks/master/ipv4/$(var).cidr > lists/$(var).cidr)
+
 cleanup:
 	iptables -D INPUT -m set --match-set geoblock src -j LOGGING || true
 	iptables -D LOGGING -m limit --limit 10/min -j LOG --log-prefix "geoblock: " --log-level 6 || true
@@ -40,4 +45,4 @@ uninstall:
 	rm /etc/ipset.conf
 	rm /usr/local/bin/geoblock.sh
 
-.PHONY: cleanup add service-deploy status uninstall
+.PHONY: cleanup add service-deploy status uninstall load
