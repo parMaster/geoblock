@@ -1,7 +1,14 @@
+CODES := $(filter-out $@,$(MAKECMDGOALS))
+BASE_URL := https://raw.githubusercontent.com/herrbischoff/country-ip-blocks/master/ipv4/
 load:
 # Loads the IP ranges for the specified country code from the herrbischoff/country-ip-blocks repository
-# Usage: make load <country-code>
-	$(foreach var,$(filter-out $@,$(MAKECMDGOALS)),curl -s https://raw.githubusercontent.com/herrbischoff/country-ip-blocks/master/ipv4/$(var).cidr > lists/$(var).cidr)
+# Usage: make load <country-code> <country-code> ...
+# Example: make load ch ru by
+# Note, that error message like "make: *** No rule to make target 'ch'.  Stop." is expected
+	@for code in $(CODES); do \
+		curl -s $(BASE_URL)$$code.cidr > lists/$$code.cidr; \
+	done
+	@echo "Download complete!"
 
 cleanup:
 	iptables -D INPUT -m set --match-set geoblock src -j LOGGING || true
