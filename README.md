@@ -1,8 +1,9 @@
-(!) Use at your own risk, make sure you have alternative ways to access your server before making changes to firewall (like KVM etc.).
+> [!CAUTION]
+> Use at your own risk, make sure you have alternative ways to access your server before making changes to firewall (like KVM etc.).
 
 It is basically a convenient way to block countries by IP with iptables. Step-by-step instructions are combined into one Makefile to compile and optimize multiple ip blocks. Only three iptables rule added as a result, which is easily revertable. Two systemd services run at system startup and load ip lists to keep geoblock persistent.
 
-## Prereqs
+## Prerequisites
 
 Load countries IP ranges in CIDR format to the `lists/` folder (see `make load <country code>` instructions). A couple of useful lists are provided as an example. Multiple lists will be automatically combined and optimized. Remember to update lists from time to time.
 
@@ -12,11 +13,9 @@ Install `iprange` and `ipset` with:
 
 ## Installation
 
-`make load <country code>` will load a list of IP ranges for a specific country from the  [herrbischoff/country-ip-blocks](https://github.com/herrbischoff/country-ip-blocks) repository and save into `lists` directory. For example, to load usual suspects:
+`make load <country code> [<country code> <country code> ...]` will load lists of IP ranges for specific countries from the [herrbischoff/country-ip-blocks](https://github.com/herrbischoff/country-ip-blocks) repository and save into `lists` directory. For example, to load usual suspects:
 
-	make load ru
-	make load cn
-	make load by
+	make load ru cn by
 
 `make add` will copy everything where it supposed to be and start services: 
 
