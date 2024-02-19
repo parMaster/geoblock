@@ -42,6 +42,32 @@ Then there are two systemd services:
 - `ipset-persistent.service` is configured so it starts at the right time in server startup sequence and loads `/etc/ipset.conf`, so `geoblock` set is loaded and ready to be used by iptables.
 - `geoblock-persistent.service` starts next and runs a script that sets up a firewall rule to block incoming traffic from IP addresses listed in the `geoblock` set, log the blocked attempts up to a limit, and then drop the packets.
 
+## Logging blocked packets
+Blocket packets are logged to syslog by default.
+To log blocked packets to the separate log file, use the following rsyslog configuration file `/etc/rsyslog.d/20-geoblock.conf`:
+
+```conf
+# Geoblock generated log messages to file
+:msg,contains,"geoblock: " /var/log/geoblock.log
+& stop
+```
+
+Logrotate configuration could be useful as well 
+`/etc/logrotate.d/geoblock`:
+
+```conf
+/var/log/geoblock.log
+{
+        rotate 5
+        weekly
+        missingok
+        notifempty
+        compress
+        delaycompress
+        sharedscripts
+}
+```
+
 ## Some sources that were used to make this
 
 ### Country IP blocks:
