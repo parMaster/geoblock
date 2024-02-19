@@ -5,7 +5,7 @@ It is basically a convenient way to block countries by IP with iptables. Step-by
 
 ## Prerequisites
 
-Load countries IP ranges in CIDR format to the `lists/` folder (see `make load <country code>` instructions). A couple of useful lists are provided as an example. Multiple lists will be automatically combined and optimized. Remember to update lists from time to time.
+Load countries IP ranges in CIDR format to the `lists/` folder (see `make load <country code>` instructions). Multiple lists will be automatically combined and optimized. Remember to update lists from time to time.
 
 Install `iprange` and `ipset` with:
 
