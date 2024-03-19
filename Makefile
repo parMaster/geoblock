@@ -24,6 +24,15 @@ add:
 	ipset save > /etc/ipset.conf
 	make service-deploy
 
+update:
+	iprange --optimize lists/* > geoblock.txt
+	ipset create geoblock_new hash:net
+	while read line; do ipset add geoblock_new $$line; done < geoblock.txt
+	ipset swap geoblock_new geoblock
+	touch /etc/ipset.conf
+	ipset save geoblock > /etc/ipset.conf
+	ipset destroy geoblock_new
+
 service-deploy:
 	cp geoblock.sh /usr/local/bin/
 	chmod +x /usr/local/bin/geoblock.sh
