@@ -29,6 +29,11 @@ Only one iptables rule is added as a result. To delete geoblock rule from iptabl
 
 	sudo make cleanup
 
+To update lists:
+
+	make load <country code> [<country code> <country code> ...]
+ 	make update
+
 To uninstall - stop and remove services, iptables rule and ipset list:
 
 	sudo make uninstall
