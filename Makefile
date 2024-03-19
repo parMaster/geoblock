@@ -21,7 +21,7 @@ add:
 	ipset create geoblock hash:net
 	while read line; do ipset add geoblock $$line; done < geoblock.txt
 	touch /etc/ipset.conf
-	ipset save > /etc/ipset.conf
+	ipset save geoblock > /etc/ipset.conf
 	make service-deploy
 
 update:
