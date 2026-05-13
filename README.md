@@ -13,7 +13,7 @@ Install `iprange` and `ipset` with:
 
 ## Installation
 
-`make load <country code> [<country code> <country code> ...]` will load lists of IP ranges for specific countries from the [herrbischoff/country-ip-blocks](https://github.com/herrbischoff/country-ip-blocks) repository and save into `lists` directory. For example, to load usual suspects:
+`make load <country code> [<country code> <country code> ...]` will load lists of IP ranges for specific countries from [ipdeny.com](https://www.ipdeny.com) and save into `lists` directory. For example, to load usual suspects:
 
 	make load ru cn by
 
@@ -48,36 +48,25 @@ Then there are two systemd services:
 - `geoblock-persistent.service` starts next and runs a script that sets up a firewall rule to block incoming traffic from IP addresses listed in the `geoblock` set, log the blocked attempts up to a limit, and then drop the packets.
 
 ## Logging blocked packets
-Blocket packets are logged to syslog by default.
-To log blocked packets to the separate log file, use the following rsyslog configuration file `/etc/rsyslog.d/20-geoblock.conf`:
 
-```conf
-# Geoblock generated log messages to file
-:msg,contains,"geoblock: " /var/log/geoblock.log
-& stop
-```
+Blocked packets are logged to the kernel log and captured automatically by `systemd-journald` — no extra configuration needed.
 
-Logrotate configuration could be useful as well 
-`/etc/logrotate.d/geoblock`:
+To read the logs:
 
-```conf
-/var/log/geoblock.log
-{
-        rotate 5
-        weekly
-        missingok
-        notifempty
-        compress
-        delaycompress
-        sharedscripts
-}
-```
+	journalctl -k --grep="geoblock"
+
+To follow live:
+
+	journalctl -kf --grep="geoblock"
 
 ## Some sources that were used to make this
 
 ### Country IP blocks:
 
-https://github.com/herrbischoff/country-ip-blocks
+https://www.ipdeny.com
+
+> [!NOTE]
+> since [country-ip-blocks](https://github.com/herrbischoff/country-ip-blocks) project is not maintained anymore (maintainer took a red pill and left the Matrix, archived his repos), ipdeny.com is the best alternative to get up-to-date lists of IP ranges for specific countries.
 
 ### iptables man:
 

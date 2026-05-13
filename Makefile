@@ -1,11 +1,10 @@
-BASE_URL := https://raw.githubusercontent.com/herrbischoff/country-ip-blocks/master/ipv4/
+BASE_URL := https://www.ipdeny.com/ipblocks/data/aggregated/
 load:
-# Loads the IP ranges for the specified country code from the herrbischoff/country-ip-blocks repository
+# Loads the IP ranges for the specified country code from ipdeny.com
 # Usage: make load <country-code> <country-code> ...
-# Example: make load ch ru by
-# Note, that error message like "make: *** No rule to make target 'ch'.  Stop." is expected
+# Example: make load cn ru by
 	@for code in $(filter-out $@,$(MAKECMDGOALS)); do \
-		curl -s $(BASE_URL)$$code.cidr > lists/$$code.cidr; \
+		curl -s $(BASE_URL)$$code-aggregated.zone > lists/$$code.zone; \
 	done
 	@echo "Download complete!"
 
@@ -61,3 +60,7 @@ uninstall:
 	rm /usr/local/bin/geoblock.sh
 
 .PHONY: cleanup add service-deploy status uninstall load
+
+# Absorbs country codes passed to "make load" so Make doesn't error on unknown targets
+%:
+	@:
