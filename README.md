@@ -34,6 +34,14 @@ To update lists:
 	make load <country code> [<country code> <country code> ...]
  	sudo make update
 
+## Whitelist
+
+To exclude specific IPs or subnets from being blocked, add them to `lists/whitelist.txt` in CIDR format, one per line:
+
+	echo "1.2.3.0/24" >> lists/whitelist.txt
+
+Run `sudo make update` to apply.
+
 To uninstall - stop and remove services, iptables rule and ipset list:
 
 	sudo make uninstall
@@ -82,4 +90,4 @@ https://selivan.github.io/2018/07/27/ipset-save-with-ufw-and-iptables-persistent
 
 ## Contributors
 
-- [nisenbeck](https://github.com/nisenbeck) - added rate limited logging of blocked packets
+- [nisenbeck](https://github.com/nisenbeck) - added rate limited logging of blocked packets, whitelist feature

@@ -16,7 +16,7 @@ cleanup:
 	ipset destroy geoblock || true
 
 add:
-	iprange --optimize lists/* > geoblock.txt
+	iprange --optimize lists/*.zone --exclude-next lists/whitelist.txt > geoblock.txt
 	ipset create geoblock hash:net
 	while read line; do ipset add geoblock $$line; done < geoblock.txt
 	touch /etc/ipset.conf
@@ -24,7 +24,7 @@ add:
 	make service-deploy
 
 update:
-	iprange --optimize lists/* > geoblock.txt
+	iprange --optimize lists/*.zone --exclude-next lists/whitelist.txt > geoblock.txt
 	ipset create geoblock_new hash:net
 	while read line; do ipset add geoblock_new $$line; done < geoblock.txt
 	ipset swap geoblock_new geoblock
